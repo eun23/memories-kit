@@ -8,7 +8,7 @@
   min-height: calc(1024px - 80px);
   height: 100vh;
 
-  background-image: url(/src/assets/images/auth-side-image.png);
+  background-image: url(src/assets/images/auth-side-image.png);
   background-repeat: no-repeat;
   background-size: cover;
 }
