@@ -20,13 +20,13 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-  
+
   private final AuthService authService;
 
   @PostMapping("/id-check")
   public ResponseEntity<ResponseDto> idCheck(
     @RequestBody @Valid IdCheckRequestDto requestBody
-  ){
+  ) {
     ResponseEntity<ResponseDto> response = authService.idCheck(requestBody);
     return response;
   }
@@ -46,5 +46,5 @@ public class AuthController {
     ResponseEntity<? super SignInResponseDto> response = authService.signIn(requestBody);
     return response;
   }
-
+  
 }

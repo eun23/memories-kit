@@ -31,8 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final UserRepository userRepository;
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
     try {
 
       String token = getToken(request);
@@ -47,8 +47,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return;
       }
 
-      boolean existUSer = userRepository.existsByUserId(userId);
-      if (!existUSer) {
+      boolean existUser = userRepository.existsByUserId(userId);
+      if (!existUser) {
         filterChain.doFilter(request, response);
         return;
       }
@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     if (!hasAuthorization) return null;
 
     // description: Bearer 인증 방식인지 확인 //
-    boolean isBearer = authorization.startsWith("Beare ");
+    boolean isBearer = authorization.startsWith("Bearer ");
     if (!isBearer) return null;
 
     // description: Authorization 필드 값에서 Token 추출 //
@@ -85,8 +85,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private void setContext(String userId, HttpServletRequest request) {
 
     // description: 접근 주체의 정보가 담길 인증 토큰 생성 //
-    AbstractAuthenticationToken authenticationToken = 
+    AbstractAuthenticationToken authenticationToken =
       new UsernamePasswordAuthenticationToken(userId, null, AuthorityUtils.NO_AUTHORITIES);
+
     // description: 생성한 인증 토큰이 어떤 요청의 정보인지 상세 내역 추가 //
     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
@@ -100,5 +101,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     SecurityContextHolder.setContext(securityContext);
 
   }
-
+  
 }

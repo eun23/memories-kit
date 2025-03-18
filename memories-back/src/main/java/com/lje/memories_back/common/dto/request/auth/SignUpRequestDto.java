@@ -9,9 +9,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class SignUpRequestDto {
+
   @NotBlank
   @Pattern(regexp="^[a-zA-Z0-9]{6,20}$")
   private String userId;
@@ -28,8 +29,11 @@ public class SignUpRequestDto {
   private String address;
 
   private String detailAddress;
-
+  
   @NotBlank
-  @Pattern(regexp="^(NOMAL|KAKAO|NAVER)$")
+  @Pattern(regexp="^(NORMAL|KAKAO|NAVER)$")
   private String joinType;
+
+  private String snsId;
+
 }

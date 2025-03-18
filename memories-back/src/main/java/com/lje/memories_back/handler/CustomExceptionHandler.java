@@ -1,4 +1,4 @@
-package com.lje.memories_back.hadler;
+package com.lje.memories_back.handler;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

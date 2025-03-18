@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity(name="memoryTest")
-@Table(name="memoty_test")
+@Table(name="memory_test")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @IdClass(MemoryTestPk.class)
 public class MemoryTestEntity {
   

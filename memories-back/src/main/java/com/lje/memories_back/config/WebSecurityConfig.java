@@ -1,5 +1,7 @@
 package com.lje.memories_back.config;
 
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -15,7 +19,12 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.lje.memories_back.filter.JwtAuthenticationFilter;
+import com.lje.memories_back.handler.OAuth2SuccessHandler;
+import com.lje.memories_back.service.implement.OAuth2UserServiceImplement;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 // class: Spring Web 보안 설정 클래스 //
@@ -29,7 +38,9 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
-  
+  private final OAuth2UserServiceImplement oauth2UserSerivce;
+  private final OAuth2SuccessHandler oAuth2SuccessHandler;
+
   // function: Web Security 설정 메서드 //
   @Bean
   protected SecurityFilterChain configure(HttpSecurity security) throws Exception {
@@ -47,11 +58,22 @@ public class WebSecurityConfig {
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       // description: 인가 설정 //
       .authorizeHttpRequests(request -> request
-        .requestMatchers("/api/v1/auth", "/api/v1/auth/**").permitAll()
+        .requestMatchers("/api/v1/auth", "/api/v1/auth/**", "/oauth2/**").permitAll()
+        .requestMatchers("/api/v1/diary", "/api/v1/diary/**").authenticated()
         .anyRequest().authenticated()
-      ) 
-      
-      // description: JWTAuthentication Filter 등록 //
+      )
+      // description: Oauth 로그인 적용 //
+      .oauth2Login(oauth2 -> oauth2
+        .redirectionEndpoint(endpoint -> endpoint.baseUri("/oauth2/callback/*"))
+        .authorizationEndpoint(endpoint -> endpoint.baseUri("/api/v1/auth/sns"))
+        .userInfoEndpoint(endpoint -> endpoint.userService(oauth2UserSerivce))
+        .successHandler(oAuth2SuccessHandler)
+      )
+      // description: 인증 또는 인가 실패에대한 처리 //
+      .exceptionHandling(exception -> exception
+        .authenticationEntryPoint(new AuthenticationFailEntryPoint())
+      )
+      // description: Jwt Authentication Filter 등록 //
       .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return security.build();
@@ -72,5 +94,22 @@ public class WebSecurityConfig {
     return source;
 
   }
+  
+}
+
+class AuthenticationFailEntryPoint implements AuthenticationEntryPoint {
+
+  @Override
+  public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+    
+    authException.printStackTrace();
+
+    response.setContentType("application/json");
+    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    response.getWriter().write("{ \"code\": \"AF\", \"message\": \"Auth Fail.\" }");
+
+  }
+
+  
 
 }

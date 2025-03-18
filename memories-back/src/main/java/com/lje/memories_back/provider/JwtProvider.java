@@ -15,7 +15,7 @@ import io.jsonwebtoken.security.Keys;
 
 // class: JWT 생성 및 검증 기능 제공자 //
 // description: JWT 암호화 알고리즘 HS256 //
-// description: JWT 암호화에 사용되는 Secret Key는 환경변수의 jwt.secret 사용 //
+// description: 암호화에 사용되는 Secret Key는 환경변수의 jwt.secret 사용 //
 // description: JWT 만료 기간 9시간 //
 @Component
 public class JwtProvider {
@@ -29,7 +29,7 @@ public class JwtProvider {
   public String create(String userId) {
 
     Date expiration = Date.from(Instant.now().plus(9, ChronoUnit.HOURS));
-    
+
     Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
     String jwt = null;
@@ -60,7 +60,7 @@ public class JwtProvider {
     Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
     try {
-      
+
       userId = Jwts.parserBuilder()
         .setSigningKey(key)
         .build()
@@ -68,7 +68,7 @@ public class JwtProvider {
         .getBody()
         .getSubject();
 
-    } catch (Exception exception) {
+    } catch(Exception exception) {
       exception.printStackTrace();
     }
 

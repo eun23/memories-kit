@@ -15,8 +15,8 @@ import lombok.Setter;
 @Table(name="concentration_test")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @IdClass(ConcentrationTestPk.class)
 public class ConcentrationTestEntity {
   
@@ -24,7 +24,7 @@ public class ConcentrationTestEntity {
   private String userId;
   @Id
   private Integer sequence;
-  private Integer measurmentScore;
+  private Integer measurementScore;
   private Integer errorCount;
   private String testDate;
   private Integer scoreGap;

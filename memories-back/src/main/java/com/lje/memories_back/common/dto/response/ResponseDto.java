@@ -8,12 +8,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access=AccessLevel.PRIVATE)
 public class ResponseDto {
   private String code;
   private String message;
 
-  public ResponseDto() {
+  protected ResponseDto() {
     this.code = ResponseCode.SUCCESS;
     this.message = ResponseMessage.SUCCESS;
   }
@@ -33,13 +33,24 @@ public class ResponseDto {
     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
   }
 
+  public static ResponseEntity<ResponseDto> noExistDiary() {
+    ResponseDto body = new ResponseDto(ResponseCode.NO_EXIST_DIARY, ResponseMessage.NO_EXIST_DIARY);
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+  }
+
   public static ResponseEntity<ResponseDto> signInFail() {
     ResponseDto body = new ResponseDto(ResponseCode.SIGN_IN_FAIL, ResponseMessage.SIGN_IN_FAIL);
     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
   }
 
+  public static ResponseEntity<ResponseDto> noPermission() {
+    ResponseDto body = new ResponseDto(ResponseCode.NO_PERMISSION, ResponseMessage.NO_PERMISSION);
+    return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+  }
+
   public static ResponseEntity<ResponseDto> databaseError() {
-    ResponseDto body = new ResponseDto(ResponseCode.DATABASEERROR, ResponseMessage.DATABASEERROR);
+    ResponseDto body = new ResponseDto(ResponseCode.DATABASE_ERROR, ResponseMessage.DATABASE_ERROR);
     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
   }
+  
 }
