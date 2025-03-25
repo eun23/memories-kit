@@ -26,7 +26,7 @@ public class DiaryServiceImplement implements DiarySerivce {
 
   @Override
   public ResponseEntity<ResponseDto> postDiary(PostDiaryRequestDto dto, String userId) {
-    
+
     try {
 
       DiaryEntity diaryEntity = new DiaryEntity(dto, userId);
@@ -48,7 +48,7 @@ public class DiaryServiceImplement implements DiarySerivce {
     
     try {
 
-      diaryEntities = diaryRepository.findByUserId(userId);
+      diaryEntities = diaryRepository.findByUserIdOrderByWriteDateDesc(userId);
 
     } catch(Exception exception) {
       exception.printStackTrace();
@@ -63,7 +63,7 @@ public class DiaryServiceImplement implements DiarySerivce {
   public ResponseEntity<? super GetDiaryResponseDto> getDiary(Integer diaryNumber) {
 
     DiaryEntity diaryEntity = null;
-
+    
     try {
 
       diaryEntity = diaryRepository.findByDiaryNumber(diaryNumber);
@@ -75,14 +75,14 @@ public class DiaryServiceImplement implements DiarySerivce {
     }
 
     return GetDiaryResponseDto.success(diaryEntity);
+
   }
 
   @Override
   public ResponseEntity<ResponseDto> patchDiary(PatchDiaryRequestDto dto, Integer diaryNumber, String userId) {
     
-
     try {
-      
+
       DiaryEntity diaryEntity = diaryRepository.findByDiaryNumber(diaryNumber);
       if (diaryEntity == null) return ResponseDto.noExistDiary();
 
@@ -92,19 +92,21 @@ public class DiaryServiceImplement implements DiarySerivce {
 
       diaryEntity.patch(dto);
       diaryRepository.save(diaryEntity);
-
+      
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
     }
 
     return ResponseDto.success(HttpStatus.OK);
+
   }
 
   @Override
   public ResponseEntity<ResponseDto> deleteDiary(Integer diaryNumber, String userId) {
+    
     try {
-
+      
       DiaryEntity diaryEntity = diaryRepository.findByDiaryNumber(diaryNumber);
       if (diaryEntity == null) return ResponseDto.noExistDiary();
 
@@ -113,13 +115,14 @@ public class DiaryServiceImplement implements DiarySerivce {
       if (!isWriter) return ResponseDto.noPermission();
 
       diaryRepository.delete(diaryEntity);
-      
+
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
     }
 
     return ResponseDto.success(HttpStatus.OK);
+
   }
   
 }

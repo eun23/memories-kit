@@ -1,5 +1,5 @@
-import { Feeling, Weather } from "src/types/aliases";
-import ResponseDto from "../response.dto";
+import { ResponseDto } from 'src/apis/dto/response';
+import { Feeling, Weather } from 'src/types/aliases';
 
 // interface: get diary response body DTO //
 export default interface GetDiaryResponseDto extends ResponseDto {

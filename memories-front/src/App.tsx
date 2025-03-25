@@ -8,6 +8,14 @@ import { ACCESS_TOKEN, AUTH_ABSOLUTE_PATH, AUTH_PATH, CONCENTRATION_TEST_COMPLET
 
 import './App.css';
 import DiaryMain from './views/Diary';
+import DiaryWrite from './views/Diary/Write';
+import DiaryDetail from './views/Diary/Detail';
+import DiaryUpdate from './views/Diary/Update';
+import MemoryTest from './views/MemoryTest';
+import MemoryTestComplete from './views/MemoryTest/Complete';
+import ConcentrationTest from './views/ConcentrationTest';
+import ConcentrationTestComplete from './views/ConcentrationTest/Complete';
+import Main from './views/Main';
 
 // Router 구성
 // - /auth : 로그인 및 회원가입 페이지
@@ -32,24 +40,24 @@ function App() {
       <Route path={AUTH_PATH} element={<Auth />} />
 
       <Route element={<Layout />}>
-        <Route path={MAIN_PATH} element={<>메인 페이지</>} />
+        <Route path={MAIN_PATH} element={<Main />} />
 
         <Route path={MEMORY_TEST_PATH}>
-          <Route index element={<>기억력 검사 페이지</>} />
-          <Route path={MEMORY_TEST_COMPLETE_PATH} element={<>기억력 검사 완료 페이지</>} />
+          <Route index element={<MemoryTest />} />
+          <Route path={MEMORY_TEST_COMPLETE_PATH} element={<MemoryTestComplete />} />
         </Route>
 
         <Route path={CONCENTRATION_TEST_PATH}>
-          <Route index element={<>집중력 검사 페이지</>} />
-          <Route path={CONCENTRATION_TEST_COMPLETE_PATH} element={<>집중력 검사 완료 페이지</>} />
+          <Route index element={<ConcentrationTest />} />
+          <Route path={CONCENTRATION_TEST_COMPLETE_PATH} element={<ConcentrationTestComplete />} />
         </Route>
 
         <Route path={DIARY_PATH}>
           <Route index element={<DiaryMain />} />
-          <Route path={DIARY_WRITE_PATH} element={<>일기 작성 페이지</>} />
+          <Route path={DIARY_WRITE_PATH} element={<DiaryWrite />} />
           <Route path={DIARY_VIEW_PATH}>
-            <Route index element={<>일기 보기 페이지</>} />
-            <Route path={DIARY_UPDATE_PATH} element={<>일기 수정 페이지</>} />
+            <Route index element={<DiaryDetail />} />
+            <Route path={DIARY_UPDATE_PATH} element={<DiaryUpdate />} />
           </Route>
         </Route>
 
@@ -79,3 +87,5 @@ function Index() {
   // render: Root 경로 컴포넌트 렌더링 //
   return null;
 }
+
+
